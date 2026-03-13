@@ -78,7 +78,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	@Override
-	protected void onResume() {
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		// Bring window to front when MuMu switches back to this tab
+		getWindow().getDecorView().requestFocus();
+		updateUI();
+	}
+
+	@Override
 		super.onResume();
 		updateUI();
 	}
@@ -86,8 +94,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		// MuMu multitab triggers window focus change instead of lifecycle events
 		if (hasFocus) {
+			// Force window to front for MuMu multitab
+			getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 			updateUI();
 		}
 	}
